@@ -10,11 +10,11 @@
 		</data>
 		<key>flutter_assets/AssetManifest.bin</key>
 		<data>
-		dIJ4mvhAbOEa8O+DK2nJF1ry2Fo=
+		ajLtUfMINgqQVpbT4tG7/XRpAd8=
 		</data>
 		<key>flutter_assets/AssetManifest.json</key>
 		<data>
-		4Asmbv3AN+5MFdCksQf4S3f++Rc=
+		VJhGtJKOk7q1XqqQqCo1pKZli1A=
 		</data>
 		<key>flutter_assets/FontManifest.json</key>
 		<data>
@@ -22,7 +22,11 @@
 		</data>
 		<key>flutter_assets/NOTICES.Z</key>
 		<data>
-		0/bJAFlrO3xETAp+WQxJJ6yRfxE=
+		cr7EcDOmSYwuS1FPeGzi4TLSeKg=
+		</data>
+		<key>flutter_assets/assets/images/Ta-Phrom-testing.jpg</key>
+		<data>
+		Adq0AuueuLB4ME0fEtYQI1CyGo8=
 		</data>
 		<key>flutter_assets/assets/images/angkor.png</key>
 		<data>
@@ -36,6 +40,10 @@
 		<data>
 		UM0yasFvBaKBnisbIBLmD9u1iBA=
 		</data>
+		<key>flutter_assets/assets/images/embeddings.json</key>
+		<data>
+		jQFq5ropbA4o8Fw20dzFfUy1rKo=
+		</data>
 		<key>flutter_assets/assets/images/explore.png</key>
 		<data>
 		i0Hvbb0uuuhD3XKLRjc/pk7OYws=
@@ -47,6 +55,30 @@
 		<key>flutter_assets/assets/images/saved.png</key>
 		<data>
 		18HHDiSLery+Blpf7y/GXcC6Hxo=
+		</data>
+		<key>flutter_assets/assets/images/temple-images/%20Preah-Vihear.jpg</key>
+		<data>
+		rADlRB+SQ4kOfSd9fWWW9k0N+KE=
+		</data>
+		<key>flutter_assets/assets/images/temple-images/AngkorWat.jpg</key>
+		<data>
+		QkEZ3zqlAC3Jh5s3h3Jq4Vhgmmc=
+		</data>
+		<key>flutter_assets/assets/images/temple-images/KohKer.jpg</key>
+		<data>
+		UgjKU4uUoSuis1qxc3R+61hghNo=
+		</data>
+		<key>flutter_assets/assets/images/temple-images/Sambor-Prei-Kuk-Temple.png</key>
+		<data>
+		qB4s9FKWWofIijTThOLFcXNSGRk=
+		</data>
+		<key>flutter_assets/assets/images/temple-images/TaProm.jpg</key>
+		<data>
+		F07c2lUmQ9uvy3lqLlQqdN4zztA=
+		</data>
+		<key>flutter_assets/assets/images/temple-images/bayon.jpg</key>
+		<data>
+		jmZbVC40Hssi/KK7d27vLWX26Lg=
 		</data>
 		<key>flutter_assets/assets/images/temple.png</key>
 		<data>
@@ -70,7 +102,7 @@
 		</data>
 		<key>flutter_assets/kernel_blob.bin</key>
 		<data>
-		66ONWJ1KrkQQP0tc4kR1cZg+JS0=
+		JYq95daYgEcN7EexfSD1NANH8nQ=
 		</data>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
 		<data>
@@ -91,14 +123,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			UpkeYba6jpoTVwhXmD1hNk+QoEqCWMGiXoKug2CXQQA=
+			Iwwb6Euyl1xyU8xm2GH5YKsVNpqDKqCUNLGb16ZB1uE=
 			</data>
 		</dict>
 		<key>flutter_assets/AssetManifest.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UaVY5RnYhsq2NJIV0wXQpRuFeiMbLuTmJ2qSY+CG3ic=
+			ki+5ZhxL5zQh37+Oiif3QncxLrUUi9V7PPAS9WGnBE8=
 			</data>
 		</dict>
 		<key>flutter_assets/FontManifest.json</key>
@@ -112,7 +144,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			YOLXuzDmNPXDylfggpPp3uV6UftR3B81nFkVQwoGm5U=
+			vydClYfsnYqdcSDHPP2OVWjYUNy+xthcNmrZZBh5MrA=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/Ta-Phrom-testing.jpg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			nK9mBBSxVDJn3pIm34Icuz5SqkFsSI+d5lLSXgVEpw8=
 			</data>
 		</dict>
 		<key>flutter_assets/assets/images/angkor.png</key>
@@ -136,6 +175,13 @@
 			13/7xnmoMTnzCEWVgXzZTdjM4q0B+MQSppYSlO/UeXw=
 			</data>
 		</dict>
+		<key>flutter_assets/assets/images/embeddings.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			whWuQGLPKiYiZ88TrPNdL6TNSGgr3pXRPoATfPMiDSE=
+			</data>
+		</dict>
 		<key>flutter_assets/assets/images/explore.png</key>
 		<dict>
 			<key>hash2</key>
@@ -155,6 +201,48 @@
 			<key>hash2</key>
 			<data>
 			JOZMo4qqZ68VeD7A6kxzeJUQ9rG9Ufmf5XT0+Z1EUlY=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/temple-images/%20Preah-Vihear.jpg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			imlqgk4qo4GcZzuzJ/l2lXTPQksmoXefmf1JVuCUOHM=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/temple-images/AngkorWat.jpg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			3nWHZqwMP7OllXgaULmAq6bNuLOYLzNqUdeDGJ6grzk=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/temple-images/KohKer.jpg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			jN+6jqY9My4HvJSxMMMMdJRGP1ZEze9rnuZqLFtWpGE=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/temple-images/Sambor-Prei-Kuk-Temple.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			YdHjPfk/5wEN17HvaBgRXPWCkJrG7Wchya34wxvtoEc=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/temple-images/TaProm.jpg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			K8Ee7NkEa/0QncHZQtWT1/+ajSRdzXJoGFTidXKaRv0=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/temple-images/bayon.jpg</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			0wBCDhfZ4pLtyf3X1dsv4ByPzdcfwlQXaoFqXx+OekI=
 			</data>
 		</dict>
 		<key>flutter_assets/assets/images/temple.png</key>
@@ -196,7 +284,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			rI5jGVtICyRP6dC29KAaf6JMVFLxpTZMMO8v0t4NMUc=
+			OfeeDSJoJROJlUwdbscPDcxhFGRSG/llz2UceL2PhQQ=
 			</data>
 		</dict>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>

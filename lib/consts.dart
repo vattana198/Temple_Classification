@@ -68,6 +68,7 @@ var display2 = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w400,
   fontFamily: 'Poppins',
+  // color: Colors.black,
 );
 
 var display3 = TextStyle(
