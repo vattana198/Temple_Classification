@@ -32,3 +32,9 @@ flutter:
   assets:
     - assets/images/
     - assets/images/temple-images/
+    - assets/images/temple-images/TaProm.jpg
+    - assets/images/temple-images/AngkorWat.jpg
+    - assets/images/temple-images/KohKer.jpg
+    - assets/images/temple-images/Preah-Vihear.jpg
+    - assets/images/temple-images/Sambor-Prei-Kuk-Temple.png
+    - assets/images/temple-images/Bayon.jpg

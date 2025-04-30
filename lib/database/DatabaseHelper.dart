@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart'; // ✅ Added to fix DB path issue
@@ -44,15 +46,15 @@ class DatabaseHelper {
 
   // Insert temple data into temples table
   Future<int> insertTemple({
-    required String templeName, 
-    required String templeInfo, 
+    required String templeName,
+    required String templeInfo,
     required double embeddingValue,
   }) async {
     final db = await database;
     Map<String, dynamic> data = {
       'temple_name': templeName,
-      'Temple_info': templeInfo, 
-      'Temple_Embeddin_value': embeddingValue, 
+      'Temple_info': templeInfo,
+      'Temple_Embeddin_value': embeddingValue,
     };
     return await db.insert('temples', data);
   }
@@ -70,55 +72,79 @@ class DatabaseHelper {
     return await db.insert('temple_images', data);
   }
 
-  Future <int> updateTempleEmbedding({
-  required String templeName,
-  required String newEmbeddingValue,
+  Future<int> updateTempleEmbedding({
+    required String templeName,
+    required String newEmbeddingValue,
   }) async {
     final db = await database;
     return await db.update(
       'temples',
       {
         'Temple_Embeddin_value': newEmbeddingValue,
-
       },
       where: 'temple_name = ?',
       whereArgs: [templeName],
-    ); 
+    );
   }
+
   // Add this to your DatabaseHelper class
-Future<Map<String, List<double>>> getAllTempleEmbeddings() async {
+  Future<Map<String, List<double>>> getAllTempleEmbeddings() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('temples');
+
+    final Map<String, List<double>> embeddings = {};
+
+    for (var temple in maps) {
+      // Convert the stored string to List<double>
+      final embeddingString = temple['Temple_Embeddin_value'].toString();
+      final embeddingList = embeddingString
+          .replaceAll('[', '')
+          .replaceAll(']', '')
+          .split(',')
+          .map((e) => double.parse(e.trim()))
+          .toList();
+
+      embeddings[temple['temple_name']] = embeddingList;
+    }
+
+    return embeddings;
+  }
+
+  Future<Map<String, dynamic>?> getTempleByName(String name) async {
+    final db = await database;
+    final List<Map<String, dynamic>> result = await db.query(
+      'temples',
+      where: 'temple_name = ?',
+      whereArgs: [name],
+      limit: 1,
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+
+  Future<int> insertScanHistory({
+    required String templeName,
+    required String imagePath,
+    required DateTime scanTime,
+  }) async {
+    final db = await database;
+    Map<String, dynamic> data = {
+      'temple_name': templeName,
+      'image_path': imagePath,
+      'scan_time': scanTime.toIso8601String(),
+    };
+    return await db.insert('scan_history', data);
+  }
+  Future<List<Map<String, dynamic>>> getScanHistory() async {
   final db = await database;
-  final List<Map<String, dynamic>> maps = await db.query('temples');
-  
-  final Map<String, List<double>> embeddings = {};
-  
-  for (var temple in maps) {
-    // Convert the stored string to List<double>
-    final embeddingString = temple['Temple_Embeddin_value'].toString();
-    final embeddingList = embeddingString
-      .replaceAll('[', '')
-      .replaceAll(']', '')
-      .split(',')
-      .map((e) => double.parse(e.trim()))
-      .toList();
-    
-    embeddings[temple['temple_name']] = embeddingList;
+  return await db.query(
+    'scan_history',
+    orderBy: 'scan_time DESC',
+  );
   }
   
-  return embeddings;
+
+  
+
+  
 }
-
-
-
-
-
-
-
-
-
-
-
-}
-
-
-

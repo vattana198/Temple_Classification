@@ -1,1 +1,0 @@
- C:\\Users\\Svoti\\StudioProjects\\Temple_Classification\\.dart_tool\\flutter_build\\0ebc021e836188c94a3825bae72decdd\\native_assets.yaml: 

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:temple_classification/pages/frontpage.dart';
 import '../pages/home.dart';
 import '../pages/frontPage.dart';
-import '/consts.dart' ; // Ensure this file contains the FrontPage widget class
+import '/consts.dart' ; 
+import '../pages/camera_page.dart';
+import '../widget/recent_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +14,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0; 
+   void _onItemTapped(int index){
+      setState(() {
+        _selectedIndex = index;
+      });
+      if (index == 0){
+        Navigator.push(
+          context ,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      } else if (index ==1){
+        // explore page
+      } else if (index == 2){
+        // saved page
+        // Navigator.push(
+        //   context ,
+        //   MaterialPageRoute(
+        //     builder: (context) => HistoryPage(),
+        //   ),
+        // );
+      }else if (index == 3){
+
+    }
+    
+          
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +57,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home ,  size: 30,),
             label: 'Home',
+            
           ),
           BottomNavigationBarItem(
             
@@ -42,14 +73,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             label: 'Saved',
+           
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person , size: 30, color: Color(0xFF6B7280)),
             label: 'Profile',
           ),
         ],
-        // currentIndex: _selectedIndex,
-        // onTap: _onItemTapped,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+       
       ),
     
       body: Stack(
@@ -135,7 +168,12 @@ class _HomePageState extends State<HomePage> {
                           width: 150,
                           child: ElevatedButton(
                             onPressed: () {
-                              print("testing");
+                              Navigator.push(
+                                context, 
+                                MaterialPageRoute(
+                                  builder: (context) =>  CameraPage(),
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFA87E62),
@@ -184,50 +222,3 @@ class _HomePageState extends State<HomePage> {
 }
 
 
-Widget recentScan(String imagePath, String title, String subtitle) {
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-    width: double.infinity,
-    height: 80,
-    decoration: boxDecoration2,
-    child: Row(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(left: 10),
-          child: Image.asset(imagePath),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 15, left: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left:10),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Container(
-                margin: const EdgeInsets.only(left: 10),
-                child: Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Color(0xFF6B7280),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
-}

@@ -2,12 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:temple_classification/api_service.dart';  
+import 'package:temple_classification/api_service.dart';
 import 'dart:io';
 import 'package:temple_classification/classifier.dart';
 import 'package:temple_classification/database/DatabaseHelper.dart';
-
-
+import 'package:temple_classification/pages/displaypage.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -33,6 +32,7 @@ class _CameraPageState extends State<CameraPage> {
     return distanceResults!.entries.reduce((a, b) => a.value < b.value ? a : b);
   }
 
+  @override
   void initState() {
     super.initState();
     _requestCameraPermission().then((_) {
@@ -51,14 +51,11 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Future<void> _setUpCameraController() async {
-    List<CameraDescription> availableCamerasList =
-        await availableCameras(); // Renamed the variable here
+    List<CameraDescription> availableCamerasList = await availableCameras();
     if (availableCamerasList.isNotEmpty) {
       setState(() {
-        cameras =
-            availableCamerasList; // Assign the available cameras to the class variable
-        cameraController =
-            CameraController(cameras.last, ResolutionPreset.high);
+        cameras = availableCamerasList;
+        cameraController = CameraController(cameras.last, ResolutionPreset.high);
       });
 
       cameraController?.initialize().then((_) {
@@ -69,21 +66,6 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
-  // Future<void> _pickImage() async {
-  //   final XFile? pickedFile =
-  //       await _picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       picture = pickedFile;
-  //       isProcessing = true; // Start freeze
-  //     });
-  //     await Future.delayed(
-  //         const Duration(milliseconds: 300)); // Freeze duration
-  //     setState(() => isProcessing = false); // End freeze
-  //   } else {
-  //     picture = null;
-  //   }
-  // }
   Future<void> _pickImage() async {
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -91,72 +73,63 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
-  // In your _processImage method, update the error handling:
-Future<void> _processImage(XFile imageFile) async {
-  setState(() {
-    picture = imageFile;
-    isProcessing = true;
-    embeddings = null;
-    errorMessage = null;
-    predictionResult = null;
-    distanceResults = null;
-  });
-
-  try {
-    // 1. Check API health
-    final isHealthy = await ApiService.checkHealth();
-
-    if (!isHealthy) {
-      throw Exception('API is not ready. Please ensure the server is running and model is loaded.');
-    }
-
-    // 2. Get embeddings from API
-    final result = await ApiService.getTempleEmbeddings(File(imageFile.path));
-    
-    if (!result.containsKey('embedding')) {
-      throw Exception('Unexpected API response format');
-    }
-    
-    final testEmbedding = List<double>.from(result['embedding']);
-    setState(() => embeddings = testEmbedding);
-
-    // 3. Get reference embeddings from database
-    final dbHelper = DatabaseHelper();
-    final referenceEmbeddings = await dbHelper.getAllTempleEmbeddings();
-    
-    if (referenceEmbeddings.isEmpty) {
-      throw Exception('No temple embeddings found in database');
-    }
-
-    // 4. Find closest match
-    final prediction = ClassifierUtils.predictClass(
-      referenceEmbeddings,
-      testEmbedding,
-      maxDistance: 1.0, // Adjust threshold as needed
-    );
-
-    // 5. Calculate all distances
-    final Map<String, double> allDistances = {};
-    referenceEmbeddings.forEach((name, emb) {
-      final distance = ClassifierUtils.euclideanDistance(testEmbedding, emb);
-      allDistances[name] = distance;
-      debugPrint('Distance to $name: $distance');
-    });
-
-    // 6. Store results
+  Future<void> _processImage(XFile imageFile) async {
     setState(() {
-      predictionResult = prediction ?? 'Unknown temple';
-      distanceResults = allDistances; // <-- important to update this!
+      picture = imageFile;
+      isProcessing = true;
+      embeddings = null;
+      errorMessage = null;
+      predictionResult = null;
+      distanceResults = null;
     });
 
-  } catch (e) {
-    setState(() => errorMessage = 'Error: ${e.toString()}');
-    debugPrint('Image processing error: $e');
-  } finally {
-    setState(() => isProcessing = false);
-  }
-}
+    try {
+      final isHealthy = await ApiService.checkHealth();
 
+      if (!isHealthy) {
+        throw Exception('API is not ready. Please ensure the server is running and model is loaded.');
+      }
+
+      final result = await ApiService.getTempleEmbeddings(File(imageFile.path));
+
+      if (!result.containsKey('embedding')) {
+        throw Exception('Unexpected API response format');
+      }
+
+      final testEmbedding = List<double>.from(result['embedding']);
+      setState(() => embeddings = testEmbedding);
+
+      final dbHelper = DatabaseHelper();
+      final referenceEmbeddings = await dbHelper.getAllTempleEmbeddings();
+
+      if (referenceEmbeddings.isEmpty) {
+        throw Exception('No temple embeddings found in database');
+      }
+
+      final prediction = ClassifierUtils.predictClass(
+        referenceEmbeddings,
+        testEmbedding,
+        maxDistance: 1.0,
+      );
+
+      final Map<String, double> allDistances = {};
+      referenceEmbeddings.forEach((name, emb) {
+        final distance = ClassifierUtils.euclideanDistance(testEmbedding, emb);
+        allDistances[name] = distance;
+        debugPrint('Distance to $name: $distance');
+      });
+
+      setState(() {
+        predictionResult = prediction ?? 'Unknown temple';
+        distanceResults = allDistances;
+      });
+    } catch (e) {
+      setState(() => errorMessage = 'Error: ${e.toString()}');
+      debugPrint('Image processing error: $e');
+    } finally {
+      setState(() => isProcessing = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -164,6 +137,21 @@ Future<void> _processImage(XFile imageFile) async {
     super.dispose();
   }
 
+  Future<void> _navigateToTempleInfo(String templeName) async {
+    final dbHelper = DatabaseHelper();
+    final templeData = await dbHelper.getTempleByName(templeName);
+
+    if (templeData != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DisplayPage(
+            templeId: templeData['id'],
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,13 +160,15 @@ Future<void> _processImage(XFile imageFile) async {
         title: const Text("Temple Classification"),
         backgroundColor: const Color(0xFFA87E62),
       ),
-      body: Stack(children: [
-        camera(),
-        bottomButtons(),
-        if (isProcessing) processingOverlay(),
-        if (embeddings != null) resultsOverlay(),
-        if (errorMessage != null) errorOverlay(),
-      ]),
+      body: Stack(
+        children: [
+          camera(),
+          bottomButtons(),
+          if (isProcessing) processingOverlay(),
+          if (embeddings != null) resultsOverlay(),
+          if (errorMessage != null) errorOverlay(),
+        ],
+      ),
     );
   }
 
@@ -204,82 +194,90 @@ Future<void> _processImage(XFile imageFile) async {
   }
 
   Widget resultsOverlay() {
-  String? identifiedTemple;
+    String? identifiedTemple;
+    MapEntry<String, double>? closestEntry;
 
-  if (distanceResults != null && distanceResults!.isNotEmpty) {
-    // Find the entry with the minimum distance
-    final closestEntry = distanceResults!.entries.reduce((a, b) => a.value < b.value ? a : b);
-    identifiedTemple = closestEntry.key;
-  }
+    if (distanceResults != null && distanceResults!.isNotEmpty) {
+      closestEntry = distanceResults!.entries.reduce((a, b) => a.value < b.value ? a : b);
+      identifiedTemple = closestEntry.key;
+    }
 
-  return Positioned(
-    top: 20,
-    left: 20,
-    right: 20,
-    child: Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (embeddings != null) ...[
-              Text(
-                'Temple Embeddings:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Vector Length: ${embeddings!.length} dimensions',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 10),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Text(
-                  embeddings!.map((e) => e.toStringAsFixed(4)).join(', '),
-                  style: TextStyle(fontFamily: 'monospace'),
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
-
-            // --- Identified Temple Section ---
-            if (identifiedTemple != null) ...[
-              Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Identified as: $identifiedTemple',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
-
-            
+    return Positioned(
+      top: 20,
+      left: 20,
+      right: 20,
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
           ],
         ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (embeddings != null) ...[
+                Text(
+                  'Temple Identified as:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                SizedBox(height: 10),
+              ],
+              if (identifiedTemple != null) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 48,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '$identifiedTemple',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () => _navigateToTempleInfo(identifiedTemple!),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFA87E62),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text('View Info', style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+              ],
+            ],
+          ),
+        ),
       ),
-    ),
-  );
-}
-
-
-
+    );
+  }
 
   Widget errorOverlay() {
     return Positioned(
@@ -368,22 +366,3 @@ Future<void> _processImage(XFile imageFile) async {
     );
   }
 }
-
-
-
-// # Make prediction by comparing the test embedding to the reference database
-// def predict_class(reference_database, test_embedding):
-
-//     min_distance = float('inf')
-//     predicted_class = None
-
-
-//     for label, reference_embedding in reference_database.items():
-
-//         distance = euclidean(test_embedding, reference_embedding)
-
-//         if distance < min_distance:
-//             min_distance = distance
-//             predicted_class = label
-
-//     return predicted_class

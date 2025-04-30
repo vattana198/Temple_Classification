@@ -4,7 +4,8 @@ import '../widget/buttonnavigation_bar.dart' as NavigationBar;
 import '../database/DatabaseHelper.dart';
 
 class DisplayPage extends StatefulWidget {
-  const DisplayPage({super.key});
+  final int templeId;
+  const DisplayPage({super.key , required this.templeId});
 
   @override
   State<DisplayPage> createState() => _DisplayPageState();
@@ -25,32 +26,40 @@ class _DisplayPageState extends State<DisplayPage> {
   }
 
   Future<void> loadTempleData() async {
-    final dbHelper = DatabaseHelper();
-    final db = await dbHelper.database;
+  final dbHelper = DatabaseHelper();
+  final db = await dbHelper.database;
 
-    final List<Map<String, dynamic>> temples = await db.query('temples', limit: 1);
-    if (temples.isNotEmpty) {
-      int templeId = temples.first['id'];
+  // Query the specific temple using the passed templeId
+  final List<Map<String, dynamic>> temples = await db.query(
+    'temples',
+    where: 'id = ?',  // Filter by the templeId
+    whereArgs: [widget.templeId],
+    limit: 1,
+  );
 
-      final List<Map<String, dynamic>> images = await db.query(
-        'temple_images',
-        where: 'temple_id = ?',
-        whereArgs: [templeId],
-        limit: 1,
-      );
+  if (temples.isNotEmpty) {
+    // Query images for this temple
+    final List<Map<String, dynamic>> images = await db.query(
+      'temple_images',
+      where: 'temple_id = ?',
+      whereArgs: [widget.templeId],
+      limit: 1,  // Only get one image (you might want to remove this if you want all images)
+    );
 
-      setState(() {
-        templeName = temples.first['temple_name'];
-        templeInfo = temples.first['Temple_info'];
-        imagePath = images.isNotEmpty ? images.first['image_path'] : null;
-        isLoading = false;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    setState(() {
+      templeName = temples.first['temple_name'];
+      templeInfo = temples.first['Temple_info'];
+      // If you have multiple images, you might want to show them all
+      imagePath = images.isNotEmpty ? images.first['image_path'] : null;
+      isLoading = false;
+    });
+  } else {
+    setState(() {
+      isLoading = false;
+    });
+    // Optional: Show an error message that the temple wasn't found
   }
+}
 
   @override
   Widget build(BuildContext context) {

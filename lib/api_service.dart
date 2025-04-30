@@ -27,44 +27,6 @@ class ApiService {
     }
   }
 
-  // SEND IMAGE TO API with improved error handling
-// static Future<Map<String, dynamic>> getTempleEmbeddings(File imageFile) async {
-//   try {
-//     // Get file extension
-//     final extension = imageFile.path.split('.').last.toLowerCase();
-//     final contentType = extension == 'jpg' ? 'image/jpg' : 'image/$extension';
-
-//     var request = http.MultipartRequest(
-//       'POST',
-//       Uri.parse('$baseURl/predict'),
-//     );
-
-//     // Add the image file with proper content type
-//     request.files.add(
-//       await http.MultipartFile.fromPath(
-//         'image', // Ensure this matches what server expects
-//         imageFile.path,
-//         contentType: MediaType.parse(contentType),
-//       ),
-//     );
-
-//     // Add debug headers
-//     request.headers['Accept'] = 'application/json';
-//     debugPrint('Content-Type: $contentType');
-
-//     var response = await request.send();
-//     var responseData = await response.stream.bytesToString();
-
-//     if (response.statusCode != 200) {
-//       throw Exception('API Error ${response.statusCode}: $responseData');
-//     }
-
-//     return json.decode(responseData);
-//   } catch (e) {
-//     debugPrint('API Error details: $e');
-//     throw Exception('Failed to process image: $e');
-//   }
-// }
 
 static Future<Map<String, dynamic>> getTempleEmbeddings(File imageFile) async {
   try {

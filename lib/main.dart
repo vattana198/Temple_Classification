@@ -9,22 +9,23 @@ import '../pages/displaypage.dart';
 import '../pages/camera_page.dart'; 
 import './database/DatabaseHelper.dart'; 
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import '../pages/history_page.dart';
 
-Future main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
 
+  // Initialize FFI for desktop platforms
   if (Platform.isWindows || Platform.isLinux) {
-    // Initialize FFI
     sqfliteFfiInit();
   }
-  sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
-  print("databae have been initialized");
+  print("Database has been initialized");
   print('Database path: ${await getDatabasesPath()}');
   
-  // Initialize the database and insert data
+  // Initialize the database
   final dbHelper = DatabaseHelper();
   final db = await dbHelper.database;
+  
 
 
   runApp(const MyApp());
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: CameraPage(),
+      home: HistoryPage(),
     );
   }
 }
